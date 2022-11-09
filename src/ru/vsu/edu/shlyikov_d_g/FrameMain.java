@@ -1,6 +1,8 @@
 package ru.vsu.edu.shlyikov_d_g;
 
+import net.objecthunter.exp4j.Expression;
 import ru.vsu.edu.shlyikov_d_g.figures.*;
+import ru.vsu.edu.shlyikov_d_g.parser.ExpressionCommander;
 import ru.vsu.edu.shlyikov_d_g.parser.Parser;
 
 import javax.swing.*;
@@ -10,6 +12,7 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.awt.event.*;
@@ -23,6 +26,7 @@ public class FrameMain extends JFrame {
     private JPanel desmosPanel;
     private JPanel cardsMethodsPanel;
     private JButton chooseMethodButton;
+    private JPanel bezierCurvePanel;
 
     private myPanel painter;
 
@@ -47,7 +51,19 @@ public class FrameMain extends JFrame {
     }
 
     private void parseFigure(){
-        setFigure(new Figure(Parser.parsing(formulaInput.getText()), startX,startY, size, numberSize, max));
+        ExpressionCommander expressionCommander = new ExpressionCommander(formulaInput.getText());
+        setFigure(new Figure(expressionCommander, startX,startY, size, numberSize, max));
+    }
+
+    private void bezier(){
+        List<Point> list = new ArrayList<>();
+        list.add(new Point(0, 0));
+        list.add(new Point(25, 190));
+//        list.add(new Point(210, 250));
+        list.add(new Point(110, 150));
+//        list.add(new Point(210, 30));
+        list.add(new Point(310, 50));
+        setFigure(new BezieCurve(list, startX, startY));
     }
 
     public static void goToLayout(JPanel jf, String name) {
@@ -81,8 +97,8 @@ public class FrameMain extends JFrame {
 
         drawButton.addActionListener(actionEvent -> {
             try {
-                System.out.println(Arrays.toString(Parser.parsing(formulaInput.getText())));
-                parseFigure();
+//                parseFigure();
+                bezier();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -116,7 +132,7 @@ public class FrameMain extends JFrame {
 
             gr = (Graphics2D) g;
 
-            DrawModule drawModule = new DrawModule(gr);
+            DrawModule drawModule = new DrawModule(gr, getHeight(), 0);
 
             gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
@@ -133,16 +149,16 @@ public class FrameMain extends JFrame {
             // Рисуем сетку
             gr.setStroke(new BasicStroke((float) 0.4));
 
-
 //            setFigure(new Tan(startX, startY, size));
 
             double temp;
             int k;
             max = 0;
             setFont(new Font("Arial", Font.BOLD, 12));
-            for (y = centerY + getHeight()/2, x = centerX+getWidth()/2, temp = 0, k = 1;
-                 y <= getHeight()*2 + Math.abs(centerY)*(y > 0 ? 2 : 1)|| x <= getWidth()*2 + Math.abs(centerX)*(x > 0 ? 2 : 1);
-                 y += size, x += size, temp+=numberSize, k+=2) {
+            max = getWidth() + Math.abs(centerX) * (centerX > 0 ? 2 : 0);
+            for (y = centerY + getHeight() / 2, x = centerX + getWidth() / 2, temp = 0, k = 1;
+                 y <= getHeight() + Math.abs(centerY) * (centerY > 0 ? 2 : 0) || x <= getWidth() + Math.abs(centerX) * (centerX > 0 ? 2 : 0);
+                 y += size, x += size, temp += numberSize, k += 2) {
                 gr.setPaint(Color.LIGHT_GRAY);
                 gr.draw(new Line2D.Double(0, y, this.getWidth(), y));
                 gr.draw(new Line2D.Double(x, 0, x, this.getHeight()));
@@ -160,15 +176,10 @@ public class FrameMain extends JFrame {
                 gr.drawString(String.valueOf(temp - k * numberSize), size / 16, (int) (y - k * size + size * 0.2));
 
                 if (draggedX == 0 && draggedY == 0 && temp == 0) {
-                    startX = (int)x;
-                    startY = (int)y;
-                }
-
-                if (max < temp){
-                    max = temp;
+                    startX = (int) x;
+                    startY = (int) y;
                 }
             }
-            System.out.println(max);
 
             // Рисуем оси
             gr.setPaint(Color.GREEN);
@@ -189,46 +200,36 @@ public class FrameMain extends JFrame {
 
             gr.setPaint(Color.BLACK);
             gr.setStroke(new BasicStroke((float) 1));
-            if (figure != null){
-                for (int i = 0; i < figure.getCoords().getMatrix().size() - 1; i++) {
-                    List<Double> list = figure.getCoords().getMatrix().get(i);
-                    List<Double> list2 = figure.getCoords().getMatrix().get(i + 1);
-                    int x0 = list.get(0).intValue();
-                    int y0 = list.get(1).intValue();
-                    int x1 = list2.get(0).intValue();
-                    int y1 = list2.get(1).intValue();
-//                    gr.drawOval(x0, y0, 1, 1);
-                    drawModule.drawLine(x0,y0,x1,y1);
+            if (figure != null) {
+                figure.draw(drawModule);
                 }
-            }
+//                System.out.println("DONE!");
         }
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
             System.out.println(figure);
-            System.out.println(size);
-            try {
-                Parser.parsing("ds");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+//            try {
+//                System.out.println(size);
+//            } catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
             if (e.getWheelRotation()<0){
-                System.out.println("UP");
-
                 minusNumSize();
                 if (figure != null) {
-                    parseFigure();
+//                    parseFigure();
+                    bezier();
                 }
             }
             else{
-                System.out.println("DOWN");
-
+//                System.out.println("DOWN");
                 plusNumSize();
                 if (figure != null) {
-                    parseFigure();
+//                    parseFigure();
+                    bezier();
                 }
             }
-            System.out.println(numberSize);
+//            System.out.println(numberSize);
         }
 
         private void plusNumSize(){
@@ -251,9 +252,9 @@ public class FrameMain extends JFrame {
             @Override
             public void mouseDragged(MouseEvent me) {
                 // сохранить координаты
-                int mouseX = me.getX();
-                int mouseY = me.getY();
-                System.out.println("Dragging mouse at " + mouseX + ", " + mouseY);
+//                int mouseX = me.getX();
+//                int mouseY = me.getY();
+//                System.out.println("Dragging mouse at " + mouseX + ", " + mouseY);
                 // Перетаскивание курсора мыши с точку с указанными координатами
                 int dx = me.getX() - draggedX;
                 int dy = me.getY() - draggedY;
@@ -269,7 +270,8 @@ public class FrameMain extends JFrame {
 //                startY -= (startY - draggedY + startY - me.getY())/50;
                 draggedX = me.getX();
                 draggedY = me.getY();
-                parseFigure();
+//                parseFigure();
+                bezier();
                 repaint();
             }
 

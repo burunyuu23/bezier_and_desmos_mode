@@ -6,12 +6,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Point {
-    private int x;
-    private int y;
+    private double x;
+    private double y;
     private boolean xClosed = false;
     private boolean yClosed = false;
 
     public Point(int x, int y){
+        this.x = x;
+        this.y = y;
+    }
+
+    public Point(double x, double y){
         this.x = x;
         this.y = y;
     }
@@ -39,11 +44,11 @@ public class Point {
 
     @Override
     public String toString() {
-        return (String.format("(%d,%d)", x, y));
+        return (String.format("(%f,%f)", x, y));
     }
 
     public int getNonZero(){
-        return x == 0 ? y : x;
+        return x == 0 ? (int) y : (int) x;
     }
 
     public static Point parsePoint(String str){
@@ -75,7 +80,7 @@ public class Point {
     }
 
     public int getX() {
-        return x;
+        return (int) x;
     }
 
     public void setX(int x) {
@@ -83,7 +88,7 @@ public class Point {
     }
 
     public int getY() {
-        return y;
+        return (int) y;
     }
 
     public void setY(int y) {

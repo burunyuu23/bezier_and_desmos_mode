@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="mainPanel" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="824" height="838"/>
+      <xy x="20" y="20" width="1674" height="1067"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -83,6 +83,15 @@
                 </properties>
               </component>
             </children>
+          </grid>
+          <grid id="e398d" binding="bezierCurvePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <card name="Card2"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
           </grid>
         </children>
       </grid>

@@ -1,8 +1,11 @@
 package ru.vsu.edu.shlyikov_d_g.figures;
 
+import org.w3c.dom.ls.LSOutput;
+import ru.vsu.edu.shlyikov_d_g.DrawModule;
 import ru.vsu.edu.shlyikov_d_g.Matrix;
 import ru.vsu.edu.shlyikov_d_g.Point;
 import ru.vsu.edu.shlyikov_d_g.parser.Element;
+import ru.vsu.edu.shlyikov_d_g.parser.ExpressionCommander;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -17,6 +20,20 @@ public class Figure extends Path2D.Float{
     int startX = 0;
     int startY = 0;
     private Matrix coords;
+
+    public void draw(DrawModule drawModule) {
+        for (int i = 0; i < getCoords().getMatrix().size() - 1; i++) {
+            List<java.lang.Double> list = getCoords().getMatrix().get(i);
+            List<java.lang.Double> list2 = getCoords().getMatrix().get(i + 1);
+            int x0 = list.get(0).intValue();
+            int y0 = list.get(1).intValue();
+            int x1 = list2.get(0).intValue();
+            int y1 = list2.get(1).intValue();
+//            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
+//                    gr.drawOval(x0, y0, 1, 1);
+            drawModule.drawLine(x0, y0, x1, y1);
+        }
+    }
 
     public Figure(Matrix coords, int startX, int startY){
         this.startX = startX;
@@ -37,23 +54,19 @@ public class Figure extends Path2D.Float{
         this.coords = new Matrix();
     }
 
-    public Figure(Element[] elements, int startX2, int startY2, double size, double numberSize, double max){
+    public Figure(ExpressionCommander expressionCommander, int startX2, int startY2, double size, double numberSize, double max){
         this(startX2, startY2);
         List<Point> list = new ArrayList<>();
 
         double multiply = size/numberSize;
 
-        double ac = elements[2].getA();
-        double bc = elements[2].getB();
-        double ax = elements[1].getA();
-        double bx = elements[1].getB();
-        double ay = elements[0].getA();
-        double by = elements[0].getB();
-
-        for (int i = -startX2; i < startX2; i++) {
-            Point p = new Point(i, (int)(multiply*Math.pow(ax*multiply*Math.pow(i*1.0/multiply, bx)/multiply+ac,
-                    1.0/by)/ay));
+        for (int i = (int) -max; i < max; i++) {
+            Point p = new Point(i, (int)(expressionCommander.solve(i/multiply)*multiply));
+//            Point p = new Point(i, (int)(multiply*Math.pow(ax*multiply*Math.pow(i*1.0/multiply, bx)/multiply+ac,
+//                    1.0/by)/ay));
+            if (Math.abs(p.getY()) < 200000000) {
                 list.add(p);
+            }
         }
 //        System.out.println(list);
         addVectors(list);
