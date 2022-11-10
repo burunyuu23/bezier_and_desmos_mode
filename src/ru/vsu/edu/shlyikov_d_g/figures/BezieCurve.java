@@ -5,6 +5,7 @@ import ru.vsu.edu.shlyikov_d_g.DrawModule;
 import ru.vsu.edu.shlyikov_d_g.Matrix;
 import ru.vsu.edu.shlyikov_d_g.Point;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BezieCurve extends Figure {
         List<Point> listPoint = new ArrayList<>();
         int size = getCoords().getMatrix().size();
 
-        for (double j = 0; j <= 1; j+=1.0/10) {
+        for (double j = 0; j <= 1; j+=1.0/50) {
             List<Point> listPointo = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 List<java.lang.Double> list = getCoords().getMatrix().get(i);
@@ -38,6 +39,20 @@ public class BezieCurve extends Figure {
         }
         Figure figure = new Figure(listPoint, startX, startY);
         figure.draw(drawModule);
+    }
+
+    public void drawBezier(DrawModule drawModule) {
+        for (int i = 0; i < getCoords().getMatrix().size() - 1; i++) {
+            List<java.lang.Double> list = getCoords().getMatrix().get(i);
+            List<java.lang.Double> list2 = getCoords().getMatrix().get(i + 1);
+            int x0 = list.get(0).intValue();
+            int y0 = list.get(1).intValue();
+            int x1 = list2.get(0).intValue();
+            int y1 = list2.get(1).intValue();
+            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
+//                    gr.drawOval(x0, y0, 1, 1);
+            drawModule.drawLine(x0, y0, x1, y1, 10, Color.RED, 10);
+        }
     }
 
     private Point sum(List<Point> list){

@@ -14,6 +14,10 @@ public class DrawModule {
     }
 
     public void drawLine(int x1, int y1, int x2, int y2){
+        drawLine(x1,y1,x2,y2,1, Color.BLACK, 2);
+    }
+
+    public void drawLine(int x1, int y1, int x2, int y2, int step, Color color, int pointSize){
         double dx,dy,steps,x,y,k;
         double xc,yc;
         boolean breakFlag = false;
@@ -24,22 +28,28 @@ public class DrawModule {
         yc=(dy/steps);
         x=x1;
         y=y1;
-        for(k=1;k<=steps;k++)
+        for(k=1;k<=steps;k++, x+=xc, y+=yc)
         {
-            if (y > max+steps || y < min-steps) {
-                if (!breakFlag) {
-                    breakFlag = true;
-                } else {
-                    break;
-                }
+            if (x == x1 && y == y1 || k == steps) {
+                g.setColor(color);
+                plot((int) x, (int) y, pointSize);
             }
-            x+=xc;
-            y+=yc;
-            plot((int)x,(int)y);
+            if ((step == 1 || (k % step < step/2))) {
+                plot((int) x, (int) y, 2);
+                if (y > max + steps || y < min - steps) {
+                    if (!breakFlag) {
+                        breakFlag = true;
+                    } else {
+                        break;
+                    }
+                }
+                g.setColor(color != Color.BLACK ? Color.LIGHT_GRAY : Color.BLACK);
+            }
         }
     }
 
-    private void plot(int x, int y) {
-            g.drawOval(x, y, 1, 1);
+    private void plot(int x, int y, int pointSize) {
+        int shift = pointSize/2;
+            g.fillOval(x - shift, y - shift, pointSize, pointSize);
     }
 }

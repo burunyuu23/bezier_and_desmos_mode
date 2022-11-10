@@ -31,6 +31,7 @@ public class FrameMain extends JFrame {
     private myPanel painter;
 
     private Figure figure;
+    private BezieCurve bezierPoints;
 
     private int startX;
     private int startY;
@@ -44,26 +45,43 @@ public class FrameMain extends JFrame {
     private int draggedX = 0;
     private int draggedY = 0;
     private double max = 0;
-    double numberSize = 1;
+    private double numberSize = 1;
+    private List<Point> pointsList = new ArrayList<>();
 
     private void setFigure(Figure figure) {
         this.figure = figure;
     }
 
-    private void parseFigure(){
-        ExpressionCommander expressionCommander = new ExpressionCommander(formulaInput.getText());
-        setFigure(new Figure(expressionCommander, startX,startY, size, numberSize, max));
+    private void parseFigure() {
+        switch (chooseMethodBox.getSelectedIndex()){
+            case 0: {
+                if (!formulaInput.getText().isEmpty()) {
+                    ExpressionCommander expressionCommander = new ExpressionCommander(formulaInput.getText());
+                    setFigure(new Figure(expressionCommander, startX, startY, size, numberSize, max));
+                }
+                break;
+            }
+            case 1: {
+                bezier();
+                setFigure(new BezieCurve(pointsList, startX, startY));
+                break;
+            }
+        }
+    }
+
+    private void refresh(){
+        figure = null;
+        bezierPoints = null;
+        pointsList = new ArrayList<>();
     }
 
     private void bezier(){
-        List<Point> list = new ArrayList<>();
-        list.add(new Point(0, 0));
-        list.add(new Point(25, 190));
-//        list.add(new Point(210, 250));
-        list.add(new Point(110, 150));
-//        list.add(new Point(210, 30));
-        list.add(new Point(310, 50));
-        setFigure(new BezieCurve(list, startX, startY));
+//        List<Point> list = new ArrayList<>();
+//        list.add(new Point(93, 239));
+//        list.add(new Point(207, 150));
+//        list.add(new Point(150, 350));
+//        list.add(new Point(339, 249));
+        bezierPoints = new BezieCurve(pointsList, startX, startY);
     }
 
     public static void goToLayout(JPanel jf, String name) {
@@ -92,15 +110,31 @@ public class FrameMain extends JFrame {
 
         drawPanel.add(painter);
 
+        cardsMethodsPanel.add(desmosPanel, "desmosPanel");
+        cardsMethodsPanel.add(bezierCurvePanel, "bezierCurvePanel");
+
         this.setResizable(false);
         this.pack();
 
         drawButton.addActionListener(actionEvent -> {
             try {
-//                parseFigure();
-                bezier();
+                parseFigure();
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        });
+        chooseMethodButton.addActionListener(actionEvent -> {
+            switch (chooseMethodBox.getSelectedIndex()){
+                case 0:{
+                    refresh();
+                    goToLayout(cardsMethodsPanel, "desmosPanel");
+                    break;
+                }
+                case 1:{
+                    refresh();
+                    goToLayout(cardsMethodsPanel, "bezierCurvePanel");
+                    break;
+                }
             }
         });
     }
@@ -111,6 +145,8 @@ public class FrameMain extends JFrame {
 
     class myPanel extends JPanel implements MouseWheelListener, MouseMotionListener, MouseListener {
         int size;
+        public static DrawModule drawModule;
+        public static Graphics2D gr;
 
         myPanel(int size) {
             this.size = size;
@@ -128,11 +164,10 @@ public class FrameMain extends JFrame {
         public void doDrawing(Graphics g) {
             double y;
             double x;
-            Graphics2D gr;
 
             gr = (Graphics2D) g;
 
-            DrawModule drawModule = new DrawModule(gr, getHeight(), 0);
+            drawModule = new DrawModule(gr, getHeight(), 0);
 
             gr.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                     RenderingHints.VALUE_ANTIALIAS_ON);
@@ -200,9 +235,12 @@ public class FrameMain extends JFrame {
 
             gr.setPaint(Color.BLACK);
             gr.setStroke(new BasicStroke((float) 1));
-            if (figure != null) {
+            if (figure != null){
                 figure.draw(drawModule);
                 }
+            if (bezierPoints != null){
+                bezierPoints.drawBezier(drawModule);
+            }
 //                System.out.println("DONE!");
         }
 
@@ -217,16 +255,14 @@ public class FrameMain extends JFrame {
             if (e.getWheelRotation()<0){
                 minusNumSize();
                 if (figure != null) {
-//                    parseFigure();
-                    bezier();
+                    parseFigure();
                 }
             }
             else{
 //                System.out.println("DOWN");
                 plusNumSize();
                 if (figure != null) {
-//                    parseFigure();
-                    bezier();
+                    parseFigure();
                 }
             }
 //            System.out.println(numberSize);
@@ -270,8 +306,7 @@ public class FrameMain extends JFrame {
 //                startY -= (startY - draggedY + startY - me.getY())/50;
                 draggedX = me.getX();
                 draggedY = me.getY();
-//                parseFigure();
-                bezier();
+                parseFigure();
                 repaint();
             }
 
@@ -291,7 +326,21 @@ public class FrameMain extends JFrame {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            System.out.printf("(%d,%d)\n",e.getX(), e.getY());
+            if (chooseMethodBox.getSelectedIndex() == 1) {
+                if (e.getButton() == MouseEvent.BUTTON1) {
+                    pointsList.add(new Point(e.getX() - startX, e.getY() - startY));
+                    System.out.printf("(%d,%d)\n", e.getX(), e.getY());
+                } else if (e.getButton() == MouseEvent.BUTTON3) {
+                    for (int i = 0; i < pointsList.size(); i++) {
+                        Point p = pointsList.get(i);
+                        if (Math.abs(p.getX() + startX - e.getX()) <= 100 && Math.abs(p.getY() + startY - e.getY()) <= 100) {
+                            pointsList.remove(i);
+                        }
+                    }
+                }
+                parseFigure();
+                repaint();
+            }
         }
 
         @Override

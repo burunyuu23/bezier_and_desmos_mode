@@ -86,6 +86,20 @@ public class Figure extends Path2D.Float{
         }
     }
 
+    public void drawLine(DrawModule drawModule) {
+        for (int i = 0; i < getCoords().getMatrix().size() - 1; i++) {
+            List<java.lang.Double> list = getCoords().getMatrix().get(i);
+            List<java.lang.Double> list2 = getCoords().getMatrix().get(i + 1);
+            int x0 = list.get(0).intValue();
+            int y0 = list.get(1).intValue();
+            int x1 = list2.get(0).intValue();
+            int y1 = list2.get(1).intValue();
+//            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
+//                    gr.drawOval(x0, y0, 1, 1);
+            drawModule.drawLine(x0, y0, x1, y1, 10, Color.LIGHT_GRAY, 3);
+        }
+    }
+
     private void addVectors(int[] x, int[] y){
         for (int i = 0; i < x.length; i++) {
             coords.setSizeX(coords.getSizeX() + 1);
