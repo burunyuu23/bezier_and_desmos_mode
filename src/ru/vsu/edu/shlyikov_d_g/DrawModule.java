@@ -17,6 +17,10 @@ public class DrawModule {
         drawLine(x1,y1,x2,y2,1, Color.BLACK, 2);
     }
 
+    public void drawArrow(int x1, int y1, int x2, int y2, int step){
+        drawLine(x1,y1,x2,y2,step, Color.BLUE, 10);
+    }
+
     public void drawLine(int x1, int y1, int x2, int y2, int step, Color color, int pointSize){
         double dx,dy,steps,x,y,k;
         double xc,yc;

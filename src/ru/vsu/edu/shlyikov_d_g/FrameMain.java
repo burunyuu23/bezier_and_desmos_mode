@@ -25,9 +25,12 @@ public class FrameMain extends JFrame {
     private JPanel cardsMethodsPanel;
     private JButton chooseMethodButton;
     private JPanel bezierCurvePanel;
+    private JPanel bsplinePanel;
+    private JPanel hermitCurvePanel;
 
     private Figure figure;
     private BezieCurve bezierPoints;
+    private HermitCurve hermitPoints;
 
     private int startX;
     private int startY;
@@ -56,12 +59,27 @@ public class FrameMain extends JFrame {
                 bezier();
                 setFigure(new BezieCurve(pointsList, startX, startY));
             }
+            case 2 -> {
+                hermit();
+                setFigure(new HermitCurve(pointsList, startX, startY));
+            }
+            case 3 -> {
+                bezier();
+//                pointsList = new ArrayList<>();
+//                pointsList.add(new Point(0,0));
+//                pointsList.add(new Point(100,50));
+//                pointsList.add(new Point(200,50));
+//                pointsList.add(new Point(300,-100));
+
+                setFigure(new BSpline(pointsList, startX, startY));
+            }
         }
     }
 
     private void refresh(){
         figure = null;
         bezierPoints = null;
+        hermitPoints = null;
         pointsList = new ArrayList<>();
     }
 
@@ -73,6 +91,17 @@ public class FrameMain extends JFrame {
 //        list.add(new Point(339, 249));
         bezierPoints = new BezieCurve(pointsList, startX, startY);
     }
+
+    private void hermit(){
+//        List<Point> list = new ArrayList<>();
+//        list.add(new Point(93, 239));
+//        list.add(new Point(207, 150));
+//        list.add(new Point(150, 350));
+//        list.add(new Point(339, 249));
+        hermitPoints = new HermitCurve(pointsList, startX, startY);
+    }
+
+
 
     public static void goToLayout(JPanel jf, String name) {
         CardLayout cardLayout = (CardLayout) jf.getLayout();
@@ -102,6 +131,8 @@ public class FrameMain extends JFrame {
 
         cardsMethodsPanel.add(desmosPanel, "desmosPanel");
         cardsMethodsPanel.add(bezierCurvePanel, "bezierCurvePanel");
+        cardsMethodsPanel.add(hermitCurvePanel, "hermitCurvePanel");
+        cardsMethodsPanel.add(bsplinePanel, "bsplinePanel");
 
         this.setResizable(false);
         this.pack();
@@ -122,6 +153,14 @@ public class FrameMain extends JFrame {
                 case 1 -> {
                     refresh();
                     goToLayout(cardsMethodsPanel, "bezierCurvePanel");
+                }
+                case 2 -> {
+                    refresh();
+                    goToLayout(cardsMethodsPanel, "hermitCurvePanel");
+                }
+                case 3 -> {
+                    refresh();
+                    goToLayout(cardsMethodsPanel, "bsplinePanel");
                 }
             }
         });
@@ -226,8 +265,11 @@ public class FrameMain extends JFrame {
             if (figure != null){
                 figure.draw(drawModule);
                 }
-            if (bezierPoints != null){
-                bezierPoints.drawBezier(drawModule);
+            if (bezierPoints != null) {
+                    bezierPoints.drawBezier(drawModule);
+            }
+            if (hermitPoints != null){
+                hermitPoints.drawHermit(drawModule);
             }
 //                System.out.println("DONE!");
         }
@@ -250,6 +292,9 @@ public class FrameMain extends JFrame {
                 if (figure != null) {
                     parseFigure();
                 }
+            }
+            else{
+                numberSize = 1;
             }
 //            System.out.println(numberSize);
         }
@@ -314,7 +359,7 @@ public class FrameMain extends JFrame {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-            if (chooseMethodBox.getSelectedIndex() == 1) {
+            if (chooseMethodBox.getSelectedIndex() != 0) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     pointsList.add(new ru.vsu.edu.shlyikov_d_g.utils.Point(e.getX() - startX, e.getY() - startY));
 //                    System.out.printf("(%d,%d)\n", e.getX(), e.getY());

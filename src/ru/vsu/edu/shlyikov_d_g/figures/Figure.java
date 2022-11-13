@@ -24,6 +24,9 @@ public class Figure extends Path2D.Float{
             int y0 = list.get(1).intValue();
             int x1 = list2.get(0).intValue();
             int y1 = list2.get(1).intValue();
+//            if (Math.abs(x1-x0) > 1){
+//                return;
+//            }
 //            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
 //                    gr.drawOval(x0, y0, 1, 1);
             drawModule.drawLine(x0, y0, x1, y1);

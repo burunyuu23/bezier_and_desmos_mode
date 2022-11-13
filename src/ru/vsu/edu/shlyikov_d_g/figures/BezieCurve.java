@@ -24,7 +24,7 @@ public class BezieCurve extends Figure {
         List<Point> listPoint = new ArrayList<>();
         int size = getCoords().getMatrix().size();
 
-        for (double t = 0; t <= 1; t+=1.0/66) {
+        for (double t = 0; t < 1; t+=1.0/100) {
             List<Point> listPointo = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 List<java.lang.Double> list = getCoords().getMatrix().get(i);
