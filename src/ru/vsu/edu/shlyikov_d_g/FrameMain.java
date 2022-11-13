@@ -189,8 +189,8 @@ public class FrameMain extends JFrame {
 
                 gr.setPaint(Color.BLACK);
                 //x
-                gr.drawString(String.valueOf(temp), (int) (x + size * 0.1), size / 6);
-                gr.drawString(String.valueOf(temp - k * numberSize), (int) (x - k * size + size * 0.1), size / 6);
+                gr.drawString(String.valueOf(temp - (k - 1) * numberSize), (int) (x + size * 0.1), size / 6);
+                gr.drawString(String.valueOf(temp), (int) (x - (k - 1) * size + size * 0.1), size / 6);
 
                 //y
                 gr.drawString(String.valueOf(temp), size / 16, (int) (y + size * 0.2));
