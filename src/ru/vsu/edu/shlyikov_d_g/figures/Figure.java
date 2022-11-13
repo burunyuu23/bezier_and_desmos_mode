@@ -12,9 +12,9 @@ import java.util.List;
 import java.util.Locale;
 
 public class Figure extends Path2D.Float{
-    int startX = 0;
-    int startY = 0;
-    private Matrix coords;
+    protected int startX = 0;
+    protected int startY = 0;
+    protected Matrix coords;
 
     public void draw(DrawModule drawModule) {
         for (int i = 0; i < getCoords().getMatrix().size() - 1; i++) {
@@ -32,6 +32,8 @@ public class Figure extends Path2D.Float{
             drawModule.drawLine(x0, y0, x1, y1);
         }
     }
+
+    public Figure(){}
 
     public Figure(Matrix coords, int startX, int startY){
         this.startX = startX;
