@@ -172,8 +172,6 @@ public class FrameMain extends JFrame {
             // Рисуем сетку
             gr.setStroke(new BasicStroke((float) 0.4));
 
-//            setFigure(new Tan(startX, startY, size));
-
             double temp;
             int k;
             max = 0;
