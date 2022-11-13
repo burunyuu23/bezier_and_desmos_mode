@@ -1,9 +1,9 @@
-package ru.vsu.edu.shlyikov_d_g;
+package ru.vsu.edu.shlyikov_d_g.utils.math;
 
 public record Combinations(long n, long m) {
 
     public long solve() {
-        if (n == m || m == 0) {
+        if (n == m || m <= 0 || n <= 0) {
             return 1;
         }
         if (n - m == 1 || m == 1) {
@@ -17,7 +17,7 @@ public record Combinations(long n, long m) {
     }
 
     private long factorial(long m) {
-        if (m != 1) {
+        if (m > 1) {
             return m * factorial(m - 1);
         } else {
             return 1;

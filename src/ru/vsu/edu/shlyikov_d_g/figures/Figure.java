@@ -1,17 +1,12 @@
 package ru.vsu.edu.shlyikov_d_g.figures;
 
-import org.w3c.dom.ls.LSOutput;
 import ru.vsu.edu.shlyikov_d_g.DrawModule;
-import ru.vsu.edu.shlyikov_d_g.Matrix;
-import ru.vsu.edu.shlyikov_d_g.Point;
-import ru.vsu.edu.shlyikov_d_g.parser.Element;
-import ru.vsu.edu.shlyikov_d_g.parser.ExpressionCommander;
+import ru.vsu.edu.shlyikov_d_g.utils.matrix.Matrix;
+import ru.vsu.edu.shlyikov_d_g.utils.Point;
+import ru.vsu.edu.shlyikov_d_g.utils.ExpressionCommander;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Path2D;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +36,7 @@ public class Figure extends Path2D.Float{
         this.coords = coords;
     }
 
-    public Figure(List<ru.vsu.edu.shlyikov_d_g.Point> coords, int startX, int startY){
+    public Figure(List<Point> coords, int startX, int startY){
         this.startX = startX;
         this.startY = startY;
         this.coords = new Matrix();
@@ -59,13 +54,31 @@ public class Figure extends Path2D.Float{
         List<Point> list = new ArrayList<>();
 
         double multiply = size/numberSize;
+        boolean isSqrt = expressionCommander.isSqrt();
 
-        for (int i = (int) -max; i < max; i++) {
+        for (int i = (int) -max ; i < max; i++) {
             Point p = new Point(i, (int)(expressionCommander.solve(i/multiply)*multiply));
 //            Point p = new Point(i, (int)(multiply*Math.pow(ax*multiply*Math.pow(i*1.0/multiply, bx)/multiply+ac,
 //                    1.0/by)/ay));
             if (Math.abs(p.getY()) < 200000000) {
-                list.add(p);
+                if (isSqrt){
+                    if (p.getY()!=0) {
+                        if ((expressionCommander.solve((i - 1) / multiply) * multiply) == 0 ^ expressionCommander.solve((i + 1) / multiply) * multiply == 0) {
+                            if ((expressionCommander.solve((i - 1) / multiply) * multiply) == 0) {
+                                list.add(new Point(i - 1, (int) (expressionCommander.solve((i - 1) / multiply) * multiply)));
+                            }
+                            list.add(p);
+                            if ((expressionCommander.solve((i + 1) / multiply) * multiply) == 0) {
+                                list.add(new Point(i + 1, (int) (expressionCommander.solve((i + 1) / multiply) * multiply)));
+                            }
+                        } else {
+                            list.add(p);
+                        }
+                    }
+                }
+                else {
+                    list.add(p);
+                }
             }
         }
 //        System.out.println(list);

@@ -1,7 +1,6 @@
-package ru.vsu.edu.shlyikov_d_g;
+package ru.vsu.edu.shlyikov_d_g.utils.matrix;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Matrix {

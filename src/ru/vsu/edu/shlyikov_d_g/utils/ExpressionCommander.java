@@ -1,4 +1,4 @@
-package ru.vsu.edu.shlyikov_d_g.parser;
+package ru.vsu.edu.shlyikov_d_g.utils;
 
 import net.objecthunter.exp4j.*;
 
@@ -11,6 +11,10 @@ public class ExpressionCommander {
         this.expression = new ExpressionBuilder(func)
                 .variable("x")
                 .build();
+    }
+
+    public boolean isSqrt(){
+        return func.contains("sqrt");
     }
 
     public double solve(double x) {

@@ -1,9 +1,9 @@
 package ru.vsu.edu.shlyikov_d_g.figures;
 
-import ru.vsu.edu.shlyikov_d_g.Combinations;
+import ru.vsu.edu.shlyikov_d_g.utils.math.Combinations;
 import ru.vsu.edu.shlyikov_d_g.DrawModule;
-import ru.vsu.edu.shlyikov_d_g.Matrix;
-import ru.vsu.edu.shlyikov_d_g.Point;
+import ru.vsu.edu.shlyikov_d_g.utils.Point;
+import ru.vsu.edu.shlyikov_d_g.utils.ExpressionCommander;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -15,18 +15,22 @@ public class BezieCurve extends Figure {
         super(coords, startX, startY);
     }
 
+    public BezieCurve(ExpressionCommander expressionCommander, int startX2, int startY2, double size, double numberSize, double max){
+        super(expressionCommander, startX2, startY2, size, numberSize, max);
+    }
+
     @Override
     public void draw(DrawModule drawModule) {
         List<Point> listPoint = new ArrayList<>();
         int size = getCoords().getMatrix().size();
 
-        for (double j = 0; j <= 1; j+=1.0/50) {
+        for (double t = 0; t <= 1; t+=1.0/11) {
             List<Point> listPointo = new ArrayList<>();
             for (int i = 0; i < size; i++) {
                 List<java.lang.Double> list = getCoords().getMatrix().get(i);
                 Combinations combinations = new Combinations(size - 1, i);
                 long comb = combinations.solve();
-                double multiply = comb * Math.pow(1 - j, size - 1 - i) * Math.pow(j, i);
+                double multiply = comb * Math.pow(1 - t, size - 1 - i) * Math.pow(t, i);
 
                 double x0 = list.get(0) * multiply;
                 double y0 = list.get(1) * multiply;
@@ -34,7 +38,7 @@ public class BezieCurve extends Figure {
             }
             Point ans = sum(listPointo);
             listPoint.add(new Point(ans.getX() - startX, ans.getY() - startY));
-            System.out.println(listPoint);
+//            System.out.println(listPoint);
 //            System.out.println("I'M HERE!!!\nREACHING FAR ACROSS THESE NEW FRONTIERS\nWITH MY LIFE I FIGHT THIS FEAR");
         }
         Figure figure = new Figure(listPoint, startX, startY);
@@ -49,7 +53,7 @@ public class BezieCurve extends Figure {
             int y0 = list.get(1).intValue();
             int x1 = list2.get(0).intValue();
             int y1 = list2.get(1).intValue();
-            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
+//            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
 //                    gr.drawOval(x0, y0, 1, 1);
             drawModule.drawLine(x0, y0, x1, y1, 10, Color.RED, 10);
         }

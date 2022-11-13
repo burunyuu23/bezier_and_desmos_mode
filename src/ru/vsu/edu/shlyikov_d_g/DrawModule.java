@@ -32,7 +32,7 @@ public class DrawModule {
         {
             if (x == x1 && y == y1 || k == steps) {
                 g.setColor(color);
-                plot((int) x, (int) y, pointSize);
+                plot((int) Math.round(x), (int) Math.round(y), pointSize);
             }
             if ((step == 1 || (k % step < step/2))) {
                 plot((int) x, (int) y, 2);

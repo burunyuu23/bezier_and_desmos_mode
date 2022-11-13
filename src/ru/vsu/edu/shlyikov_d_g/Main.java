@@ -1,6 +1,7 @@
 package ru.vsu.edu.shlyikov_d_g;
 
-import java.util.ArrayList;
+import ru.vsu.edu.shlyikov_d_g.utils.math.Combinations;
+
 import java.util.Locale;
 
 public class Main {

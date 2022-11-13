@@ -1,9 +1,8 @@
 package ru.vsu.edu.shlyikov_d_g;
 
-import net.objecthunter.exp4j.Expression;
 import ru.vsu.edu.shlyikov_d_g.figures.*;
-import ru.vsu.edu.shlyikov_d_g.parser.ExpressionCommander;
-import ru.vsu.edu.shlyikov_d_g.parser.Parser;
+import ru.vsu.edu.shlyikov_d_g.utils.ExpressionCommander;
+import ru.vsu.edu.shlyikov_d_g.utils.Point;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +12,6 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.awt.event.*;
 
@@ -28,43 +26,35 @@ public class FrameMain extends JFrame {
     private JButton chooseMethodButton;
     private JPanel bezierCurvePanel;
 
-    private myPanel painter;
-
     private Figure figure;
     private BezieCurve bezierPoints;
 
     private int startX;
     private int startY;
-    private int w = 8;
-    private int h = 8;
     private int size;
-    private int clickedX = -10;
-    private int clickedY = -10;
     private int centerX = 0;
     private int centerY = 0;
     private int draggedX = 0;
     private int draggedY = 0;
     private double max = 0;
-    private double numberSize = 1;
-    private List<Point> pointsList = new ArrayList<>();
+    private double numberSize = -1;
+    private List<ru.vsu.edu.shlyikov_d_g.utils.Point> pointsList = new ArrayList<>();
 
     private void setFigure(Figure figure) {
         this.figure = figure;
     }
 
     private void parseFigure() {
-        switch (chooseMethodBox.getSelectedIndex()){
-            case 0: {
+        switch (chooseMethodBox.getSelectedIndex()) {
+            case 0 -> {
                 if (!formulaInput.getText().isEmpty()) {
                     ExpressionCommander expressionCommander = new ExpressionCommander(formulaInput.getText());
                     setFigure(new Figure(expressionCommander, startX, startY, size, numberSize, max));
                 }
-                break;
             }
-            case 1: {
+            case 1 -> {
                 bezier();
-                setFigure(new BezieCurve(pointsList, startX, startY));
-                break;
+                setFigure(new Figure(pointsList, startX, startY));
             }
         }
     }
@@ -90,11 +80,11 @@ public class FrameMain extends JFrame {
     }
 
     private int getW() {
-        return this.w;
+        return 8;
     }
 
     private int getH() {
-        return this.h;
+        return 8;
     }
 
     public FrameMain() {
@@ -102,7 +92,7 @@ public class FrameMain extends JFrame {
         this.setContentPane(mainPanel);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        painter = new myPanel(size);
+        myPanel painter = new myPanel(size);
 
         this.setSize(1920, 1080);
         painter.setSize(1650, 800);
@@ -124,16 +114,14 @@ public class FrameMain extends JFrame {
             }
         });
         chooseMethodButton.addActionListener(actionEvent -> {
-            switch (chooseMethodBox.getSelectedIndex()){
-                case 0:{
+            switch (chooseMethodBox.getSelectedIndex()) {
+                case 0 -> {
                     refresh();
                     goToLayout(cardsMethodsPanel, "desmosPanel");
-                    break;
                 }
-                case 1:{
+                case 1 -> {
                     refresh();
                     goToLayout(cardsMethodsPanel, "bezierCurvePanel");
-                    break;
                 }
             }
         });
@@ -191,7 +179,7 @@ public class FrameMain extends JFrame {
             max = 0;
             setFont(new Font("Arial", Font.BOLD, 12));
             max = getWidth() + Math.abs(centerX) * (centerX > 0 ? 2 : 0);
-            for (y = centerY + getHeight() / 2, x = centerX + getWidth() / 2, temp = 0, k = 1;
+            for (y = centerY + getHeight() / 2.0, x = centerX + getWidth() / 2.0, temp = 0, k = 1;
                  y <= getHeight() + Math.abs(centerY) * (centerY > 0 ? 2 : 0) || x <= getWidth() + Math.abs(centerX) * (centerX > 0 ? 2 : 0);
                  y += size, x += size, temp += numberSize, k += 2) {
                 gr.setPaint(Color.LIGHT_GRAY);
@@ -228,6 +216,8 @@ public class FrameMain extends JFrame {
             gr.setPaint(Color.RED);
             gr.fillOval(startX - w / 2, startY - h / 2, w, h);
 
+            int clickedX = -10;
+            int clickedY = -10;
             if (startX != clickedX && startY != clickedY) {
                 gr.setPaint(Color.BLUE);
                 gr.fillOval(clickedX, clickedY, w, h);
@@ -254,16 +244,13 @@ public class FrameMain extends JFrame {
 //            }
             if (e.getWheelRotation()<0){
                 minusNumSize();
-                if (figure != null) {
-                    parseFigure();
-                }
             }
             else{
 //                System.out.println("DOWN");
                 plusNumSize();
-                if (figure != null) {
-                    parseFigure();
-                }
+            }
+            if (figure != null) {
+                parseFigure();
             }
 //            System.out.println(numberSize);
         }
@@ -292,22 +279,24 @@ public class FrameMain extends JFrame {
 //                int mouseY = me.getY();
 //                System.out.println("Dragging mouse at " + mouseX + ", " + mouseY);
                 // Перетаскивание курсора мыши с точку с указанными координатами
-                int dx = me.getX() - draggedX;
-                int dy = me.getY() - draggedY;
-                if (Math.abs(dx) < 100 && Math.abs(dy) < 100){
-                    centerX += dx;
-                    centerY += dy;
-                    startX  +=  dx;
-                    startY  += dy;
-                }
+                if (me.getModifiersEx() == InputEvent.BUTTON2_DOWN_MASK) {
+                    int dx = me.getX() - draggedX;
+                    int dy = me.getY() - draggedY;
+                    if (Math.abs(dx) < 50 && Math.abs(dy) < 50) {
+                        centerX += dx;
+                        centerY += dy;
+                        startX += dx;
+                        startY += dy;
+                    }
 //                centerX -= (startX - draggedX + startX - me.getX())/50;
 //                centerY -= (startY - draggedY + startY - me.getY())/50;
 //                startX -= (startX - draggedX + startX - me.getX())/50;
 //                startY -= (startY - draggedY + startY - me.getY())/50;
-                draggedX = me.getX();
-                draggedY = me.getY();
-                parseFigure();
-                repaint();
+                    draggedX = me.getX();
+                    draggedY = me.getY();
+                    parseFigure();
+                    repaint();
+                }
             }
 
             @Override
@@ -328,12 +317,12 @@ public class FrameMain extends JFrame {
         public void mouseClicked(MouseEvent e) {
             if (chooseMethodBox.getSelectedIndex() == 1) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
-                    pointsList.add(new Point(e.getX() - startX, e.getY() - startY));
-                    System.out.printf("(%d,%d)\n", e.getX(), e.getY());
+                    pointsList.add(new ru.vsu.edu.shlyikov_d_g.utils.Point(e.getX() - startX, e.getY() - startY));
+//                    System.out.printf("(%d,%d)\n", e.getX(), e.getY());
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     for (int i = 0; i < pointsList.size(); i++) {
                         Point p = pointsList.get(i);
-                        if (Math.abs(p.getX() + startX - e.getX()) <= 100 && Math.abs(p.getY() + startY - e.getY()) <= 100) {
+                        if (Math.abs(p.getX() + startX - e.getX()) <= 20 && Math.abs(p.getY() + startY - e.getY()) <= 20) {
                             pointsList.remove(i);
                         }
                     }

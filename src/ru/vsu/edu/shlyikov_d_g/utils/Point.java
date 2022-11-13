@@ -1,4 +1,4 @@
-package ru.vsu.edu.shlyikov_d_g;
+package ru.vsu.edu.shlyikov_d_g.utils;
 
 import java.util.ArrayList;
 import java.util.List;
