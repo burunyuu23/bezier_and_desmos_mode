@@ -34,7 +34,7 @@ public class DrawModule {
         y=y1;
         for(k=1;k<=steps;k++, x+=xc, y+=yc)
         {
-            if (x == x1 && y == y1 || k == steps) {
+            if ((color != Color.BLUE && x == x1 && y == y1) || k == steps) {
                 g.setColor(color);
                 plot((int) Math.round(x), (int) Math.round(y), pointSize);
             }

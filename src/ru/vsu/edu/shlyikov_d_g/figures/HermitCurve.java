@@ -104,27 +104,41 @@ public class HermitCurve extends Figure{
     }
 
     public void drawHermit(DrawModule drawModule) {
-        for (int i = 0; i < getCoords().getMatrix().size() - 3; i += 4) {
+        for (int i = 0; i < getCoords().getMatrix().size() - 1; i += 4) {
             List<java.lang.Double> list = getCoords().getMatrix().get(i);
             List<java.lang.Double> list2 = getCoords().getMatrix().get(i + 1);
+            int x0 = list.get(0).intValue();
+            int y0 = list.get(1).intValue();
+
+            int x1 = list2.get(0).intValue();
+            int y1 = list2.get(1).intValue();
+//            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
+//                    gr.drawOval(x0, y0, 1, 1);
+            drawModule.drawLine(x0, y0, x1, y1, 10, Color.RED, 10);
+        }
+
+        for (int i = 0; i < getCoords().getMatrix().size() - 2; i += 4) {
+            List<java.lang.Double> list = getCoords().getMatrix().get(i);
             List<java.lang.Double> list3 = getCoords().getMatrix().get(i + 2);
-            List<java.lang.Double> list4 = getCoords().getMatrix().get(i + 3);
             int x0 = list.get(0).intValue();
             int y0 = list.get(1).intValue();
             int x00 = list3.get(0).intValue();
             int y00 = list3.get(1).intValue();
-
-            int x1 = list2.get(0).intValue();
-            int y1 = list2.get(1).intValue();
-            int x11 = list4.get(0).intValue();
-            int y11 = list4.get(1).intValue();
 //            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
 //                    gr.drawOval(x0, y0, 1, 1);
             drawModule.drawArrow(x0, y0, x00, y00, 10);
-            drawModule.drawArrow(x1, y1, x11, y11, 10);
+        }
 
-            drawModule.drawLine(x0, y0, x1, y1, 10, Color.RED, 10);
-
+        for (int i = 1; i < getCoords().getMatrix().size() - 2; i += 4) {
+            List<java.lang.Double> list = getCoords().getMatrix().get(i);
+            List<java.lang.Double> list3 = getCoords().getMatrix().get(i + 2);
+            int x0 = list.get(0).intValue();
+            int y0 = list.get(1).intValue();
+            int x00 = list3.get(0).intValue();
+            int y00 = list3.get(1).intValue();
+//            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
+//                    gr.drawOval(x0, y0, 1, 1);
+            drawModule.drawArrow(x0, y0, x00, y00, 10);
         }
     }
 
