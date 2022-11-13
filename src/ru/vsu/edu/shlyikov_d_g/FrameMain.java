@@ -234,21 +234,22 @@ public class FrameMain extends JFrame {
 
         @Override
         public void mouseWheelMoved(MouseWheelEvent e) {
-            System.out.println(figure);
+            if (chooseMethodBox.getSelectedIndex() == 0) {
+                System.out.println(figure);
 //            try {
 //                System.out.println(size);
 //            } catch (Exception ex) {
 //                ex.printStackTrace();
 //            }
-            if (e.getWheelRotation()<0){
-                minusNumSize();
-            }
-            else{
+                if (e.getWheelRotation() < 0) {
+                    minusNumSize();
+                } else {
 //                System.out.println("DOWN");
-                plusNumSize();
-            }
-            if (figure != null) {
-                parseFigure();
+                    plusNumSize();
+                }
+                if (figure != null) {
+                    parseFigure();
+                }
             }
 //            System.out.println(numberSize);
         }
