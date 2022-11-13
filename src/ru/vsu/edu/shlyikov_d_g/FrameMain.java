@@ -29,7 +29,7 @@ public class FrameMain extends JFrame {
     private JPanel hermitCurvePanel;
 
     private Figure figure;
-    private BezieCurve bezierPoints;
+    private Bezier bezierPoints;
     private HermitCurve hermitPoints;
 
     private int startX;
@@ -57,7 +57,7 @@ public class FrameMain extends JFrame {
             }
             case 1 -> {
                 bezier();
-                setFigure(new BezieCurve(pointsList, startX, startY));
+                setFigure(new Bezier(pointsList, startX, startY));
             }
             case 2 -> {
                 hermit();
@@ -89,7 +89,7 @@ public class FrameMain extends JFrame {
 //        list.add(new Point(207, 150));
 //        list.add(new Point(150, 350));
 //        list.add(new Point(339, 249));
-        bezierPoints = new BezieCurve(pointsList, startX, startY);
+        bezierPoints = new Bezier(pointsList, startX, startY);
     }
 
     private void hermit(){
