@@ -54,7 +54,7 @@ public class FrameMain extends JFrame {
             }
             case 1 -> {
                 bezier();
-                setFigure(new Figure(pointsList, startX, startY));
+                setFigure(new BezieCurve(pointsList, startX, startY));
             }
         }
     }
