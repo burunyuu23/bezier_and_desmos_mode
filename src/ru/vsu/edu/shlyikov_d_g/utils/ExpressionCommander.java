@@ -14,7 +14,7 @@ public class ExpressionCommander {
     }
 
     public boolean isSqrt(){
-        return func.contains("sqrt");
+        return func.contains("sqrt") || func.contains("log");
     }
 
     public double solve(double x) {
@@ -22,7 +22,7 @@ public class ExpressionCommander {
             expression.setVariable("x", x);
             return expression.evaluate();
         } catch (Throwable e){
-            if (e instanceof ArithmeticException && "Division by zero!".equals((e.getMessage()))){
+            if (e instanceof ArithmeticException || "Division by zero!".equals((e.getMessage()))){
                 return Double.MAX_VALUE;
             }
             else{

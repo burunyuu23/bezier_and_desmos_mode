@@ -62,7 +62,7 @@ public class Figure extends Path2D.Float{
         boolean isSqrt = expressionCommander.isSqrt();
 
         for (int i = (int) -max ; i < max; i++) {
-            Point p = new Point(i*(-1), (int)(expressionCommander.solve(i/multiply)*multiply));
+            Point p = new Point(i*(-1), (int)(expressionCommander.solve((i+0.00000001)/multiply)*multiply));
 //            Point p = new Point(i, (int)(multiply*Math.pow(ax*multiply*Math.pow(i*1.0/multiply, bx)/multiply+ac,
 //                    1.0/by)/ay));
             if (Math.abs(p.getY()) < 200000000) {
@@ -70,11 +70,11 @@ public class Figure extends Path2D.Float{
                     if (p.getY()!=0) {
                         if ((expressionCommander.solve((i - 1) / multiply) * multiply) == 0 ^ expressionCommander.solve((i + 1) / multiply) * multiply == 0) {
                             if ((expressionCommander.solve((i - 1) / multiply) * multiply) == 0) {
-                                list.add(new Point(i - 1, (int) (expressionCommander.solve((i - 1) / multiply) * multiply)));
+                                list.add(new Point((i - 1)*(-1), (int) (expressionCommander.solve((i - 1) / multiply) * multiply)));
                             }
                             list.add(p);
                             if ((expressionCommander.solve((i + 1) / multiply) * multiply) == 0) {
-                                list.add(new Point(i + 1, (int) (expressionCommander.solve((i + 1) / multiply) * multiply)));
+                                list.add(new Point((i + 1)*(-1), (int) (expressionCommander.solve((i + 1) / multiply) * multiply)));
                             }
                         } else {
                             list.add(p);
