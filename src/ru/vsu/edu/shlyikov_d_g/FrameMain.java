@@ -5,6 +5,8 @@ import ru.vsu.edu.shlyikov_d_g.utils.ExpressionCommander;
 import ru.vsu.edu.shlyikov_d_g.utils.Point;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -27,6 +29,8 @@ public class FrameMain extends JFrame {
     private JPanel bezierCurvePanel;
     private JPanel bsplinePanel;
     private JPanel hermitCurvePanel;
+    private JSlider parameter;
+    private JLabel a;
 
     private Figure figure;
     private Bezier bezierPoints;
@@ -51,7 +55,8 @@ public class FrameMain extends JFrame {
         switch (chooseMethodBox.getSelectedIndex()) {
             case 0 -> {
                 if (!formulaInput.getText().isEmpty()) {
-                    ExpressionCommander expressionCommander = new ExpressionCommander(formulaInput.getText());
+                    String expression = formulaInput.getText().replaceAll("a", String.valueOf(parameter.getValue()));
+                    ExpressionCommander expressionCommander = new ExpressionCommander(expression);
                     setFigure(new Figure(expressionCommander, startX, startY, size, numberSize, max));
                 }
             }
@@ -137,6 +142,10 @@ public class FrameMain extends JFrame {
         this.setResizable(false);
         this.pack();
 
+        parameter.addChangeListener(arg0 -> {
+            a.setText(("a = " + parameter.getValue()));
+            parseFigure();
+        });
         drawButton.addActionListener(actionEvent -> {
             try {
                 parseFigure();

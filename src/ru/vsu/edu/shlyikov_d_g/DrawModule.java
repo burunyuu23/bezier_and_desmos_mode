@@ -36,7 +36,11 @@ public class DrawModule {
         {
             if ((color != Color.BLUE && x == x1 && y == y1) || k == steps) {
                 g.setColor(color);
-                plot((int) Math.round(x), (int) Math.round(y), pointSize);
+                if (color == Color.BLUE) {
+                    arrow((int) Math.round(x), (int) Math.round(y), pointSize);
+                } else {
+                    plot((int) Math.round(x), (int) Math.round(y), pointSize);
+                }
             }
             if ((step == 1 || (k % step < step/2))) {
                 plot((int) x, (int) y, 2);
@@ -55,5 +59,10 @@ public class DrawModule {
     private void plot(int x, int y, int pointSize) {
         int shift = pointSize/2;
             g.fillOval(x - shift, y - shift, pointSize, pointSize);
+    }
+
+    private void arrow(int x, int y, int pointSize) {
+        int shift = pointSize/2;
+        g.fillOval(x - shift*2, y - shift*2, pointSize*2, pointSize*2);
     }
 }
