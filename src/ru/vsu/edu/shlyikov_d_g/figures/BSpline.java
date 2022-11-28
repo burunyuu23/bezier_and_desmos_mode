@@ -58,27 +58,34 @@ public class BSpline extends Figure{
     public void draw(DrawModule drawModule) {
         List<Point> listPoint = new ArrayList<>();
         int size = getCoords().getMatrix().size();
+        double k = 1.0/100;
 
-            for (int i = 1; i < size - 2; i++) {
-                for (double t = 0; t < 1; t+=1.0/100) {
-                List<java.lang.Double> list1 = getCoords().getMatrix().get(i-1);
-                List<java.lang.Double> list2 = getCoords().getMatrix().get(i);
-                List<java.lang.Double> list3 = getCoords().getMatrix().get(i+1);
-                List<java.lang.Double> list4 = getCoords().getMatrix().get(i+2);
+            for (int i = 0; i < size - 3; i++) {
+                for (double t = 0; t < 1; t+=k) {
+                    List<java.lang.Double> list1 = getCoords().getMatrix().get(i);
+                    List<java.lang.Double> list2 = getCoords().getMatrix().get(i + 1);
+                    List<java.lang.Double> list3 = getCoords().getMatrix().get(i + 2);
+                    List<java.lang.Double> list4 = getCoords().getMatrix().get(i + 3);
+
+                    if (Math.abs(list1.get(0) - list2.get(0)) == 1 || Math.abs(list2.get(0) - list3.get(0)) == 1
+                    || Math.abs(list3.get(0) - list4.get(0)) == 1) k = 1;
+                    else k = 1.0/100;
 
 //                double multiply = coxDeBoor(i == 0 ? 0 : degree/(i*1.0), t*(degree/(i+size*1.0)), t, degree);
-                double multiply1 = matrixMult(t, Ms1);
-                double multiply2 = matrixMult(t, Ms2);
-                double multiply3 = matrixMult(t, Ms3);
-                double multiply4 = matrixMult(t, Ms4);
+                    double multiply1 = matrixMult(t, Ms1);
+                    double multiply2 = matrixMult(t, Ms2);
+                    double multiply3 = matrixMult(t, Ms3);
+                    double multiply4 = matrixMult(t, Ms4);
 //                System.out.println(multiply);
 
-                double x0 = list1.get(0) * multiply1 + list2.get(0) * multiply2
-                        + list3.get(0) * multiply3 + list4.get(0) * multiply4;
-                double y0 = list1.get(1) * multiply1 + list2.get(1) * multiply2
-                        + list3.get(1) * multiply3 + list4.get(1) * multiply4;
-                listPoint.add(new Point(1/6.0 * x0 - startX, 1/6.0 * y0 - startY));
-            }
+                    double x0 = list1.get(0) * multiply1 + list2.get(0) * multiply2
+                            + list3.get(0) * multiply3 + list4.get(0) * multiply4;
+                    x0 = 1 / 6.0 * x0 - startX;
+                    double y0 = list1.get(1) * multiply1 + list2.get(1) * multiply2
+                            + list3.get(1) * multiply3 + list4.get(1) * multiply4;
+                    y0 = 1 / 6.0 * y0 - startY;
+                    listPoint.add(new Point(x0, y0));
+                }
 //            System.out.println(listPoint);
 //            System.out.println("I'M HERE!!!\nREACHING FAR ACROSS THESE NEW FRONTIERS\nWITH MY LIFE I FIGHT THIS FEAR");
         }

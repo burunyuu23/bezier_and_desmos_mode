@@ -31,6 +31,7 @@ public class FrameMain extends JFrame {
     private JPanel hermitCurvePanel;
     private JSlider parameter;
     private JLabel a;
+    private JCheckBox BSplineDrawCheckBox;
 
     private Figure figure;
     private Bezier bezierPoints;
@@ -57,7 +58,10 @@ public class FrameMain extends JFrame {
                 if (!formulaInput.getText().isEmpty()) {
                     String expression = formulaInput.getText().replaceAll("a", String.valueOf(parameter.getValue()));
                     ExpressionCommander expressionCommander = new ExpressionCommander(expression);
-                    setFigure(new Figure(expressionCommander, startX, startY, size, numberSize, max));
+                    if (BSplineDrawCheckBox.isSelected())
+                    setFigure(new Figure(expressionCommander, startX, startY, size, numberSize, max).toBSpline());
+                    else setFigure(new Figure(expressionCommander, startX, startY, size, numberSize, max));
+
                 }
             }
             case 1 -> {

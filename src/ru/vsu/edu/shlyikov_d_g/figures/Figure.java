@@ -15,6 +15,7 @@ public class Figure extends Path2D.Float{
     protected int startX = 0;
     protected int startY = 0;
     protected Matrix coords;
+    protected double max;
 
     public void draw(DrawModule drawModule) {
         for (int i = 0; i < getCoords().getMatrix().size() - 1; i++) {
@@ -57,11 +58,12 @@ public class Figure extends Path2D.Float{
     public Figure(ExpressionCommander expressionCommander, int startX2, int startY2, double size, double numberSize, double max){
         this(startX2, startY2);
         List<Point> list = new ArrayList<>();
+        this.max = max;
 
         double multiply = size/numberSize;
         boolean isSqrt = expressionCommander.isSqrt();
 
-        for (int i = (int) -max ; i < max; i++) {
+        for (int i = (int) -max; i < max; i++) {
             Point p = new Point(i*(-1), (int)(expressionCommander.solve((i+0.00000001)/multiply)*multiply));
 //            Point p = new Point(i, (int)(multiply*Math.pow(ax*multiply*Math.pow(i*1.0/multiply, bx)/multiply+ac,
 //                    1.0/by)/ay));
@@ -104,18 +106,12 @@ public class Figure extends Path2D.Float{
         }
     }
 
-    public void drawLine(DrawModule drawModule) {
+    public BSpline toBSpline() {
+        BSpline bSpline = new BSpline(startX, startY);
         for (int i = 0; i < getCoords().getMatrix().size() - 1; i++) {
-            List<java.lang.Double> list = getCoords().getMatrix().get(i);
-            List<java.lang.Double> list2 = getCoords().getMatrix().get(i + 1);
-            int x0 = list.get(0).intValue();
-            int y0 = list.get(1).intValue();
-            int x1 = list2.get(0).intValue();
-            int y1 = list2.get(1).intValue();
-//            System.out.println(new Point(x0, y0) + " + " + new Point(x1, y1));
-//                    gr.drawOval(x0, y0, 1, 1);
-            drawModule.drawLine(x0, y0, x1, y1, 10, Color.LIGHT_GRAY, 3);
+            bSpline.addVectors(getCoords().getMatrix().get(i).get(0), getCoords().getMatrix().get(i).get(1));
         }
+        return bSpline;
     }
 
     private void addVectors(int[] x, int[] y){
@@ -124,6 +120,12 @@ public class Figure extends Path2D.Float{
             double[] vector = new double[]{startX+x[i], startY+y[i], 1};
             coords.addVector(vector);
         }
+    }
+
+    protected void addVectors(double x, double y){
+            coords.setSizeX(coords.getSizeX() + 1);
+            double[] vector = new double[]{x, y, 1};
+            coords.addVector(vector);
     }
 
     protected void addVectors(List<Point> list){
